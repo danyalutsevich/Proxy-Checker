@@ -1,0 +1,17 @@
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Proxy Checker.csproj.AssemblyReference.cache
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Proxy Checker.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Proxy Checker.AssemblyInfoInputs.cache
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Proxy Checker.AssemblyInfo.cs
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Proxy Checker.csproj.CoreCompileInputs.cache
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\Proxy Checker.exe
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\Proxy Checker.deps.json
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\Proxy Checker.runtimeconfig.json
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\Proxy Checker.runtimeconfig.dev.json
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\Proxy Checker.dll
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\ref\Proxy Checker.dll
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\Proxy Checker.pdb
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Proxy Checker.dll
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\ref\Proxy Checker.dll
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Proxy Checker.pdb
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Proxy Checker.genruntimeconfig.cache
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\ProxySource.txt
