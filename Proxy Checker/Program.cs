@@ -15,11 +15,9 @@ namespace Proxy_Checker
     {
         static void Main(string[] args)
         {
-
             Proxy.GetProxiesFromLinks();
             Proxy.FilterProxies();
             Proxy.SaveProxies();
-
         }
     }
 }

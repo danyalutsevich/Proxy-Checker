@@ -55,6 +55,7 @@ namespace Proxy_Checker
                 return false;
             }
         }
+
         public static void GetProxiesFromLinks()
         {
 
@@ -75,6 +76,8 @@ namespace Proxy_Checker
             }
 
             Task.WaitAll(tasks.ToArray());
+
+            Console.Clear();
 
             //lefts only unique proxies
             Proxies = Proxies.GroupBy(i => i.ProxyAddress).Select(i => i.FirstOrDefault()).ToList();
