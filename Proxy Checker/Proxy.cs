@@ -57,58 +57,6 @@ namespace Proxy_Checker
         }
         public static void GetProxiesFromLinks()
         {
-            #region
-            //GetProxyFromSource("https://www.proxyscan.io/download?type=https", CorrectProxy);
-            //GetProxyFromSource("https://www.proxyscan.io/download?type=http", CorrectProxy);
-            //GetProxyFromSource("https://www.proxyscan.io/download?type=socks4", CorrectProxy);
-            //GetProxyFromSource("https://www.proxyscan.io/download?type=socks5", CorrectProxy);
-            //GetProxyFromSource("http://rootjazz.com/proxies/proxies.txt", CorrectProxy);
-            //GetProxyFromSource("https://free-proxy-list.net/", CorrectProxy);
-            //GetProxyFromSource("http://proxysearcher.sourceforge.net/Proxy%20List.php?type=http&filtered=true", CorrectProxy);
-            //GetProxyFromSource("http://proxysearcher.sourceforge.net/Proxy%20List.php?type=socks&filtered=true", CorrectProxy);
-            //GetProxyFromSource("https://www.my-proxy.com/free-proxy-list-10.html", CorrectProxy);
-            //GetProxyFromSource("https://www.my-proxy.com/free-elite-proxy.html", CorrectProxy);
-            //GetProxyFromSource("https://proxypedia.org/", CorrectProxy);
-            //GetProxyFromSource("https://kidux.net/proxies", CorrectProxy);
-            //GetProxyFromSource("https://proxy-daily.com/", CorrectProxy);
-            //GetProxyFromSource("https://webanetlabs.net/publ/24-1-0-1392", CorrectProxy);
-            //GetProxyFromSource("https://www.us-proxy.org/", CorrectProxy);
-            //GetProxyFromSource("https://openproxy.space/list/http", CorrectProxy);
-            //GetProxyFromSource("https://openproxy.space/list/socks4", CorrectProxy);
-            //GetProxyFromSource("https://openproxy.space/list/socks5", CorrectProxy);
-
-            //GetProxyFromSource("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/jetkai/proxy-list/main/archive/txt/working-proxies-history.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/Volodichev/proxy-list/main/http.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/mertguvencli/http-proxy-list/main/proxy-list/data.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/UserR3X/proxy-list/main/online/all.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/proxy.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/UptimerBot/proxy-list/main/proxies/http.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/UptimerBot/proxy-list/main/proxies/socks4.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/UptimerBot/proxy-list/main/proxies/socks5.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/mmpx12/proxy-list/master/proxies.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/manuGMG/proxy-365/main/SOCKS5.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS4_RAW.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/KUTlime/ProxyList/main/ProxyList.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/B4RC0DE-TM/proxy-list/main/proxies.txt", CorrectProxy);
-            //GetProxyFromSource("https://raw.githubusercontent.com/SkyWtkh/HTTP-Proxy-List/main/free_http_proxy_list.txt", CorrectProxy);
-
-
-            //for (int i = 0; i < 9000; i += 64)
-            //{
-            //    GetProxyFromSource($"https://hidemy.name/en/proxy-list/?start=" + i + "#list", HideMeProxy);
-            //}
-
-            #endregion
 
             string sources = String.Empty;
 
@@ -164,16 +112,11 @@ namespace Proxy_Checker
             Console.Clear();
             #region Task
 
-            //ThreadPool.SetMinThreads(Proxies.Count, Proxies.Count);
-
             List<Task<bool>> tasks = new List<Task<bool>>();
 
             foreach (var proxy in Proxies)
             {
-                //tasks.Add(Task.Factory.StartNew(() => { ProxyTest(i); }));
-                //tasks.Add(new Task(() => { ProxyTest(proxy); }));
-                tasks.Add(ProxyTest(proxy));
-                //tasks[tasks.Count - 1];
+                tasks.Add(ProxyTestAsync(proxy));
             }
 
             Task.WaitAll(tasks.ToArray());
@@ -212,52 +155,81 @@ namespace Proxy_Checker
             return proxy;
 
         }
-        private static async Task<bool> ProxyTest(object o)
+        private static void ProxyTest(object o)
         {
-
-            return await Task.Run(() =>
+            //semaphore.WaitOne();
+            WebProxy proxy = null;
+            Proxy p = null;
+            try
             {
-                //semaphore.WaitOne();
-                WebProxy proxy = null;
-                Proxy p = null;
+                p = o as Proxy;
+                proxy = new WebProxy(p.ProxyAddress);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(p.ProxyAddress); ;
+                Console.WriteLine(ex);
+            }
+
+            using (var web = new WebClient())
+            {
                 try
                 {
-                    p = o as Proxy;
-                    proxy = new WebProxy(p.ProxyAddress);
+                    web.Proxy = proxy;
+                    Stopwatch timer = new Stopwatch();
+                    timer.Start();
+
+                    Uri uri = new Uri("https://www.google.com/");
+
+                    var data = web.DownloadString(uri);
+
+                    //var data = uri.
+
+                    timer.Stop();
+                    p.ResponseTime = timer.ElapsedMilliseconds;
+
+                    //Console.WriteLine(data);
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine(p.ProxyAddress); ;
-                    Console.WriteLine(ex);
+                    p.ResponseTime = 0;
                 }
+            }
+            //semaphore.Release();
+        }
+        private static async Task<bool> ProxyTestAsync(object o)
+        {
+            Proxy proxy = null;
 
-                PrintProxyStat();
-
-                using (var web = new WebClient())
+            using (var web = new WebClient())
+            {
+                try
                 {
-                    try
-                    {
-                        web.Proxy = proxy;
-                        Stopwatch timer = new Stopwatch();
-                        timer.Start();
+                    proxy = o as Proxy;
+                    web.Proxy = new WebProxy(proxy.ProxyAddress);
+                    web.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36";
 
-                        var data = web.DownloadString("https://2ip.ru/");
+                    Stopwatch timer = new Stopwatch();
+                    timer.Start();
 
-                        timer.Stop();
-                        p.ResponseTime = timer.ElapsedMilliseconds;
+                    Uri uri = new Uri("https://www.google.com/");
+                    await web.DownloadStringTaskAsync(uri);
 
-                        //Console.WriteLine(data);
-                        return true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                        p.ResponseTime = 0;
-                        return false;
-                    }
+                    timer.Stop();
+                    proxy.ResponseTime = timer.ElapsedMilliseconds;
+                    PrintProxyStat();
+                    
+                    return true;
                 }
-                //semaphore.Release();
-            });
+                catch
+                {
+                    proxy.ResponseTime = 0;
+                    PrintProxyStat();
+
+                    return false;
+                }
+            }
+           
         }
         private static async Task GetProxyFromSource(object o)
         {
@@ -282,7 +254,7 @@ namespace Proxy_Checker
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
                 Console.WriteLine($"INVALID LINK {Source}");
             }
 
