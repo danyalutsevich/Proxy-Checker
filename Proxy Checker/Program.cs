@@ -13,15 +13,13 @@ namespace Proxy_Checker
 {
     internal class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
 
             Proxy.GetProxiesFromLinks();
             Proxy.FilterProxies();
             Proxy.SaveProxies();
 
-
-            Console.WriteLine("Hello World!");
         }
     }
 }

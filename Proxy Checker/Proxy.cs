@@ -80,6 +80,7 @@ namespace Proxy_Checker
             Proxies = Proxies.GroupBy(i => i.ProxyAddress).Select(i => i.FirstOrDefault()).ToList();
 
         }
+
         public static void SaveProxies()
         {
             var sb = new StringBuilder();
@@ -95,6 +96,7 @@ namespace Proxy_Checker
                 sw.Write(sb.ToString());
             }
         }
+
         public static void GetProxiesFromFile()
         {
             using (var sr = new StreamReader("proxy.txt"))
@@ -107,9 +109,9 @@ namespace Proxy_Checker
                 }
             }
         }
+
         public static void FilterProxies()
         {
-            Console.Clear();
             #region Task
 
             List<Task<bool>> tasks = new List<Task<bool>>();
@@ -139,6 +141,7 @@ namespace Proxy_Checker
 
             Proxies = Proxies.Where(i => i.ResponseTime != 0).ToList();
         }
+
         public static Proxy GetProxy()
         {
             // Gets the fastest of least used 
@@ -155,27 +158,19 @@ namespace Proxy_Checker
             return proxy;
 
         }
+
         private static void ProxyTest(object o)
         {
-            //semaphore.WaitOne();
-            WebProxy proxy = null;
-            Proxy p = null;
-            try
-            {
-                p = o as Proxy;
-                proxy = new WebProxy(p.ProxyAddress);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(p.ProxyAddress); ;
-                Console.WriteLine(ex);
-            }
+            Proxy proxy = null;
 
             using (var web = new WebClient())
             {
                 try
                 {
-                    web.Proxy = proxy;
+                    proxy = o as Proxy;
+                    web.Proxy = new WebProxy(proxy.ProxyAddress);
+                    web.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36";
+
                     Stopwatch timer = new Stopwatch();
                     timer.Start();
 
@@ -183,19 +178,16 @@ namespace Proxy_Checker
 
                     var data = web.DownloadString(uri);
 
-                    //var data = uri.
 
                     timer.Stop();
-                    p.ResponseTime = timer.ElapsedMilliseconds;
+                    proxy.ResponseTime = timer.ElapsedMilliseconds;
 
-                    //Console.WriteLine(data);
                 }
                 catch
                 {
-                    p.ResponseTime = 0;
+                    proxy.ResponseTime = 0;
                 }
             }
-            //semaphore.Release();
         }
         private static async Task<bool> ProxyTestAsync(object o)
         {
@@ -218,7 +210,7 @@ namespace Proxy_Checker
                     timer.Stop();
                     proxy.ResponseTime = timer.ElapsedMilliseconds;
                     PrintProxyStat();
-                    
+
                     return true;
                 }
                 catch
@@ -229,8 +221,8 @@ namespace Proxy_Checker
                     return false;
                 }
             }
-           
         }
+
         private static async Task GetProxyFromSource(object o)
         {
             string Source = o as string;
@@ -259,13 +251,13 @@ namespace Proxy_Checker
             }
 
         }
+
         private static void PrintProxyStat()
         {
             var sb = new StringBuilder();
             Console.CursorVisible = false;
             Console.CursorTop = 0;
             Console.CursorLeft = 0;
-            //Console.Clear();
             sb.Append("Threads: ");
             sb.AppendLine($"{Process.GetCurrentProcess().Threads.Count}   ");
 
@@ -306,8 +298,5 @@ namespace Proxy_Checker
             #endregion
 
         }
-
-
-
     }
 }
