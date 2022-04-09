@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
@@ -11,6 +12,15 @@ using System.IO;
 
 namespace Proxy_Checker
 {
+    class CheckerConfig
+    {
+        public string UserAgent { get; set; }
+        public string ProxiesSource { get; set; }
+        public string CheckedProxies { get; set; }
+        public string RequestLink { get; set; }
+        public int WriteFilePeriod { get; set; }
+    }
+
     class Proxy
     {
         public static List<Proxy> Proxies { get; set; }
@@ -18,7 +28,7 @@ namespace Proxy_Checker
         private static Regex Port { get; set; }
         private static Regex CorrectProxy { get; set; }
         private static Regex HideMeProxy { get; set; }
-        public static Semaphore semaphore { get; set; }
+        public static CheckerConfig config { get; set; }
 
         static Proxy()
         {
@@ -27,7 +37,11 @@ namespace Proxy_Checker
             Port = new Regex(@":\d+");
             CorrectProxy = new Regex(@"(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])):\d+");
             HideMeProxy = new Regex(@"(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))</td><td>\d+");
-            semaphore = new Semaphore(2000, 2000);
+
+            using (var sr = new StreamReader("config.json"))
+            {
+                config = JsonSerializer.Deserialize<CheckerConfig>(sr.ReadToEnd());
+            }
         }
 
         public string ProxyAddress { get; set; }
@@ -58,10 +72,9 @@ namespace Proxy_Checker
 
         public static void GetProxiesFromLinks()
         {
-
             string sources = String.Empty;
 
-            using (var sr = new StreamReader("ProxySource.txt"))
+            using (var sr = new StreamReader(config.ProxiesSource))
             {
                 sources = sr.ReadToEnd();
             }
@@ -81,20 +94,19 @@ namespace Proxy_Checker
 
             //lefts only unique proxies
             Proxies = Proxies.GroupBy(i => i.ProxyAddress).Select(i => i.FirstOrDefault()).ToList();
-
         }
 
         public static void SaveProxies()
         {
             var sb = new StringBuilder();
 
-            foreach (var proxy in Proxies)
+            foreach (var proxy in Proxies.Where(i=>i.ResponseTime>0))
             {
                 sb.Append(proxy.ProxyAddress);
                 sb.Append("\n");
             }
 
-            using (var sw = new StreamWriter("proxy.txt"))
+            using (var sw = new StreamWriter(config.CheckedProxies))
             {
                 sw.Write(sb.ToString());
             }
@@ -102,7 +114,7 @@ namespace Proxy_Checker
 
         public static void GetProxiesFromFile()
         {
-            using (var sr = new StreamReader("proxy.txt"))
+            using (var sr = new StreamReader(config.CheckedProxies))
             {
                 var data = sr.ReadToEnd();
 
@@ -172,19 +184,22 @@ namespace Proxy_Checker
                 {
                     proxy = o as Proxy;
                     web.Proxy = new WebProxy(proxy.ProxyAddress);
-                    web.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36";
+                    web.Headers["User-Agent"] = config.UserAgent;
 
                     Stopwatch timer = new Stopwatch();
                     timer.Start();
 
-                    Uri uri = new Uri("https://www.google.com/");
+                    Uri uri = new Uri(config.RequestLink);
 
                     var data = web.DownloadString(uri);
-
 
                     timer.Stop();
                     proxy.ResponseTime = timer.ElapsedMilliseconds;
 
+                    if (Proxies.Where(i => i.ResponseTime > 0).Count() % config.WriteFilePeriod == 0)
+                    {
+                        SaveProxies();
+                    }
                 }
                 catch
                 {
@@ -192,29 +207,34 @@ namespace Proxy_Checker
                 }
             }
         }
-        private static async Task<bool> ProxyTestAsync(object o)
-        {
-            Proxy proxy = null;
 
+        private static async Task<bool> ProxyTestAsync(Proxy proxy)
+        {
             using (var web = new WebClient())
             {
                 try
                 {
-                    proxy = o as Proxy;
                     web.Proxy = new WebProxy(proxy.ProxyAddress);
-                    web.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36";
+                    web.Headers["User-Agent"] = config.UserAgent;
 
                     Stopwatch timer = new Stopwatch();
                     timer.Start();
 
-                    Uri uri = new Uri("https://www.google.com/");
+                    Uri uri = new Uri(config.RequestLink);
+
                     await web.DownloadStringTaskAsync(uri);
 
                     timer.Stop();
                     proxy.ResponseTime = timer.ElapsedMilliseconds;
                     PrintProxyStat();
 
+                    if (Proxies.Where(i => i.ResponseTime > 0).Count() % config.WriteFilePeriod == 0)
+                    {
+                        SaveProxies();
+                    }
+
                     return true;
+
                 }
                 catch
                 {
@@ -234,7 +254,7 @@ namespace Proxy_Checker
                 using (var wc = new WebClient())
                 {
                     //need this so service wont identify you as a bot
-                    wc.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36";
+                    wc.Headers["User-Agent"] = config.UserAgent;
 
                     var data = wc.DownloadString(Source);
 

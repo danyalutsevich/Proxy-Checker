@@ -14,4 +14,5 @@ C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Prox
 C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\ref\Proxy Checker.dll
 C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Proxy Checker.pdb
 C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\obj\Debug\net5.0\Proxy Checker.genruntimeconfig.cache
-C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\ProxySource.txt
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\config.json
+C:\Users\luche\source\repos\C#\Proxy Checker\Proxy Checker\bin\Debug\net5.0\ProxiesSource.txt

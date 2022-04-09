@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\luche\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\luche\\.nuget\\packages"
+    ]
+  }
+}
