@@ -38,3 +38,4 @@ https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt
 https://raw.githubusercontent.com/B4RC0DE-TM/proxy-list/main/proxies.txt
 https://raw.githubusercontent.com/SkyWtkh/HTTP-Proxy-List/main/free_http_proxy_list.txt
 https://api.good-proxies.ru/getfree.php?count=1000&ping=8000&time=600&works=500&key=freeproxy
+https://rcloak.com/api/proxies/raw?protocol=all
